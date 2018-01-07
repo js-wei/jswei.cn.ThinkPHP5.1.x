@@ -1,0 +1,147 @@
+<include file="public/header" title="{$model.name}" keywords="{$model.name}"/>
+<div class="col-lg-12 col-sm-12 col-xs-12">
+    <div class="widget  radius-bordered">
+        <div class="widget-header">
+            <span class="widget-caption">{$model.name}</span>
+        </div>
+        <div class="widget-body">
+            <form id="togglingForm" action="__URL__/add_tianjia_handler" method="post" enctype="multipart/form-data" class="form-horizontal" autocomplete="off">
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">管理账号<sup class="text-danger">*</sup></label>
+                    <div class="col-lg-3">
+                        <input type="text" name="username" 
+                        	value="<notempty name="info">{$info.username}</notempty>" 
+                        	class="form-control" placeholder="账号"/>
+                        <input type="hidden" name="id" value="<notempty name='info'>{$info.id}</notempty>">
+                    </div>
+                </div>
+               <empty name="info">
+               	<div class="form-group">
+                    <label class="col-lg-2 control-label">账号密码<sup class="text-danger">*</sup></label>
+                    <div class="col-lg-3">
+                        <input type="password" name="password" readonly
+                        	class="form-control" placeholder="密码"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">确认密码<sup class="text-danger">*</sup></label>
+                    <div class="col-lg-3">
+                        <input type="password" name="comfrim_password" readonly
+                        	class="form-control" placeholder="确认密码"/>
+                    </div>
+                </div>
+               </empty>
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">账号权限<sup class="text-danger">*</sup></label>
+                    <div class="col-lg-6 pl-0">
+                       <volist name="power" id="vo">
+	                       	<div class="checkbox pull-left">
+		                        <label>
+		                            <input name="gid" type="radio" <empty name="info"><eq name="$key" value="0">checked</eq><else /><eq name="vo.id" value="$info.gid">checked</eq></empty> value="{$vo.id}" class="colored-blueberry">
+		                            <span class="text">{$vo.title}</span>
+		                        </label>
+		                    </div>
+                       </volist>	
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">账号状态</label>
+                    <div class="col-lg-6 pl-0">
+                        <div class="radio pull-left">
+                            <label>
+                                <input name="status" type="radio" value="0" class="colored-success" <notempty name="info"><eq name="info.status" value="0">checked="checked"</eq><else />checked="checked"</notempty>>
+                                <span class="text">正常</span>
+                            </label>
+                        </div>
+                        <div class="radio pull-left">
+                            <label>
+                                <input name="status" type="radio" value="1" class="colored-danger" <notempty name="info"><eq name="info.status" value="1">checked="checked"</eq></notempty>>
+                                <span class="text">锁定</span>
+                            </label>
+                        </div>
+                        <div class="radio hide">
+                            <label>
+                                <input name="status" type="radio" class="colored-blueberry">
+                                <span class="text"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <hr class="wide" />
+                <div class="form-group">
+                    <div class="col-lg-4 col-lg-offset-2">
+                        <button type="submit" class="btn btn-danger col-lg-2">提交</button>
+                        <button type="button" class="btn btn-warning col-lg-2 ml10" onclick="window.history.go(-1);">返回</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<js file="__JS__/validation/bootstrapValidator.js"/>
+<script type="text/javascript">
+    $(function(){
+        $('#togglingForm').bootstrapValidator({
+            message: '验证没有通过',
+            feedbackicons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function (validator, form, submitButton) {
+                var index = layer.load(2,{
+                    shade: [0.4,'#000'] //0.1透明度的白色背景
+                });
+                $.post(form.attr('action'),form.serialize(),function(data){
+                    layer.close(index);
+                    if(data.status==1){
+                        layer.alert(data.msg,{icon:6,end:function(){
+                            location.href = data.redirect;
+                        }});
+                    }else {
+                        layer.alert(data.msg,{icon:5});
+                    }
+                });
+            },
+            fields: {
+                username: {
+                    validators: {
+                        notEmpty: {
+                            message: '请输入管理员账号'
+                        },
+                        emailAddress: {
+                            message: '输入不是有效的邮箱地址'
+                        }
+                    }
+                },
+                password: {
+                    validators: {
+                        notEmpty: {
+                            message: '请输入管理员密码'
+                        }
+                    }
+                },
+                comfrim_password: {
+                    validators: {
+                        notEmpty: {
+                            message: '请输入确认密码'
+                        },
+                        identical: {
+	                        field: 'password',
+	                        message: '两次密码不一致'
+	                    }
+                    }
+                }
+            }
+        })
+        .find('button[data-toggle]')
+        .on('click', function () {
+            var $target = $($(this).attr('data-toggle'));
+            $target.toggle();
+            if (!$target.is(':visible')) {
+                $('#togglingForm').data('bootstrapValidator').disableSubmitButtons(false);
+            }
+        });
+    });
+</script>
+<include file="public/footer"/>

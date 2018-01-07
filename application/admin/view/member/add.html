@@ -1,0 +1,62 @@
+<include file="public/header" title="{$model.name}" keywords="{$model.name}"/>
+<div class="col-lg-12 col-sm-12 col-xs-12">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4>会员详情</h4>
+        </div>
+        <div class="panel-body">
+            <div class="col-lg-10 col-lg-offset-1">
+                <h5>基本信息</h5>
+                <hr>
+                <ul class="list-unstyled base-info">
+                    <li>头像: <img src="{$info.head}" height="50" class="img-rounded"></li>
+                    <li>账号: {$info.phone}</li>
+                    <li>昵称:  {$info.nickname}</li>
+                    <li>邮箱 : {$info.email}</li>
+                    <li>住址 : {$info.city} {$info.address}</li>
+                    <li>状态 :
+                        <eq name="info.status" value="1">
+                            <label class="label label-danger">锁定</label>
+                            <a href="__URL__/unlock" data-id="{$info.id}" data-type="0" class="lock">解锁</a>
+                            <else />
+                            <label class="label label-success">正常</label>
+                            <a href="__URL__/unlock" data-id="{$info.id}" data-type="1" class="lock">锁定</a>
+                        </eq>
+                    </li>
+                </ul>
+                <h5 class="mt20">登陆信息</h5>
+                <hr>
+                <ul class="list-unstyled">
+                    <li>最后登陆IP : {$info.last_login_ip}</li>
+                    <li>最后登陆城市 : {$info.last_login_address}</li>
+                    <li>最后登陆时间 : {$info.last_login_time|date='Y-m-d H:i:s',###}</li>
+                </ul>
+                <hr>
+                <button type="button" class="btn btn-warning" onclick="history.go(-1)">返回</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $('.lock').on('click',function (e) {
+            e.preventDefault();
+            var url = $(this).attr('href'),
+                id = $(this).attr('data-id'),
+                type = $(this).attr('data-type');
+            layer.prompt({title: '请输入锁定原因', formType: 2}, function(text, index){
+                $.post(url,{id:id,type:type,content:text},function (result) {
+                    layer.close(index);
+                    if(result.status==1){
+                        layer.alert(result.msg,{icon:6,end:function () {
+                            window.location.reload();
+                        }});
+                    }else{
+                        layer.alert(result.msg,{icon:5});
+                    }
+                })
+            });
+        });
+    });
+</script>
+<include file="public/footer"/>

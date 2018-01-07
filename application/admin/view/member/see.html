@@ -1,0 +1,70 @@
+<include file="public/header" title="{$model.name}" keywords="{$model.name}"/>
+<div class="col-lg-12 col-sm-12 col-xs-12">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4>用户认证</h4>
+        </div>
+        <div class="panel-body">
+            <h5>用户认证</h5>
+            <hr>
+            <ul class="list-unstyled base-info">
+                <li>账号: {$info.phone}</li>
+                <li>姓名 : {$info.real_name}</li>
+                <li>证件类型 : {$info.idcard_type}</li>
+                <li>证件号码 : {$info.card}</li>
+                <li>
+                    证件照 : <img src="{$info.image}" alt="{$info.phone}" height="220">
+                    <br>
+                    <a href="{$info.image}" target="_blank">查看原图</a>
+                </li>
+                <li>
+                    审核状态 :
+                    <eq name="info.status" value="0"><span class="text-warning">未审核</span></eq>
+                    <eq name="info.status" value="1"><span class="text-success">已通过</span></eq>
+                    <eq name="info.status" value="2"><span class="text-danger">未通过</span></eq>
+                </li>
+                <li>申请时间 : {$info.date|date='Y-m-d H:i:s',###}</li>
+                <li>
+                    <form action="javascript:void(0);" autocomplete="off">
+                        <fieldset <eq name="k" value="1">disabled</eq> >
+                            <input type="hidden" value="{$info.mid}" name="mid">
+                            <hr>
+                            <div class="mt10"></div>
+                            审核成功/失败原因 :
+                            <div class="mt10"></div>
+                            <textarea class="form-control" id="massage" placeholder="审核成功/失败原因" style="width:450px;height:120px;" >{$info.content|default='恭喜你认证通过可以选购产品了'}</textarea>
+                            <hr>
+                            <div class="clearfix"></div>
+                            <button type="button" class="btn btn-warning" data-role="1">审核通过</button>
+                            <button type="button" class="btn btn-danger" data-role="0">审核失败</button>
+                        </fieldset>
+                    </form>
+                    <eq name="k" value="1">
+                        <hr>
+                        <button class="btn btn-sky" onclick="history.go(-1);">返回</button>
+                    </eq>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $(document).on('click','.btn',function (e) {
+            e.preventDefault();
+            var status = $(this).attr('data-role'),
+                mid = $('input[name="mid"]').val(),
+                msg = $('#massage').val();
+            $.post('__SELF__',{status:status,mid:mid,content:msg},function (result) {
+                if(result.status==0){
+                    layer.alert(result.msg,{icon:5});
+                }else{
+                    layer.alert(result.msg,{icon:6,end:function () {
+                        history.go(-1);
+                    }});
+                }
+            });
+        });
+    })
+</script>
+<include file="public/footer"/>

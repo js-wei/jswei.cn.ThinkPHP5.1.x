@@ -1,0 +1,136 @@
+<include file="public/header" title="{$model.name}" keywords="{$model.name}"/>
+<div class="col-lg-12 col-sm-12 col-xs-12">
+    <div class="widget  radius-bordered">
+        <div class="widget-header">
+            <span class="widget-caption">{$model.name}</span>
+        </div>
+        <div class="widget-body">
+            <form id="togglingForm" action="__URL__/add_group_handler" method="post" enctype="multipart/form-data" class="form-horizontal" autocomplete="off">
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">管理组名称<sup class="text-danger">*</sup></label>
+                    <div class="col-lg-3">
+                        <input type="text" name="title" 
+                        	value="<notempty name="info">{$info.title}</notempty>" 
+                        	class="form-control" placeholder="管理组名称"/>
+                        <input type="hidden" name="id" value="<notempty name='info'>{$info.id}</notempty>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">账号权限<sup class="text-danger">*</sup></label>
+                    <div class="col-lg-6">
+                       <ul class="list-unstyled">
+                       	<volist name="power" id="vo">
+                       	 	<empty name="vo.child">
+                       	 		<li>
+                       	 			<div class="checkbox">
+			                            <label style="padding-left:0;">
+			                                <input name="power[]" type="checkbox" <notempty name="info"><if condition="in_array($vo['id'],$info['power'])">checked</if></notempty> value="{$vo.id}" class="colored-blueberry">
+			                                <span class="text">{$vo.name}</span>
+			                            </label>
+			                        </div>
+                       	 		</li>
+                       	 		<else />
+                       	 		<li>
+                       	 			<div class="checkbox">
+			                            <label style="padding-left:0;">
+			                                <input name="power[]" type="checkbox" <notempty name="info"><if condition="in_array($vo['id'],$info['power'])">checked</if></notempty> value="{$vo.id}" class="colored-blueberry">
+			                                <span class="text">{$vo.name}</span>
+			                            </label>
+			                        </div>
+                       	 			<ul>
+                       	 				<volist name="vo.child" id="vo1">
+                       	 					<li>{$vo.name}</li>
+                       	 				</volist>
+                       	 			</ul>
+                       	 		</li>
+                       	 	</empty>
+                       	</volist>
+                       </ul>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">账号状态</label>
+                    <div class="col-lg-6 pl-0">
+                        <div class="radio pull-left">
+                            <label>
+                                <input name="status" type="radio" value="0" class="colored-success" <notempty name="info"><eq name="info.status" value="0">checked="checked"</eq><else />checked="checked"</notempty>>
+                                <span class="text">正常</span>
+                            </label>
+                        </div>
+                        <div class="radio pull-left">
+                            <label>
+                                <input name="status" type="radio" value="1" class="colored-danger" <notempty name="info"><eq name="info.status" value="1">checked="checked"</eq></notempty>>
+                                <span class="text">锁定</span>
+                            </label>
+                        </div>
+                        <div class="radio hide">
+                            <label>
+                                <input name="status" type="radio" class="colored-blueberry">
+                                <span class="text"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <hr class="wide" />
+                <div class="form-group">
+                    <div class="col-lg-4 col-lg-offset-2">
+                        <button type="submit" class="btn btn-danger col-lg-2">提交</button>
+                        <button type="button" class="btn btn-warning col-lg-2 ml10" onclick="window.history.go(-1);">返回</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<js file="__JS__/validation/bootstrapValidator.js"/>
+<link rel="stylesheet" href="__PLUG__/Uploadify/uploadify.css" />
+<script type="text/javascript" src="__PLUG__/Uploadify/jquery.uploadify.min.js"></script>
+<link rel="stylesheet" href="__PLUG__/kindeditor/plugins/code/prettify.css" />
+<script charset="utf-8" src="__PLUG__/kindeditor/kindeditor.js"></script>
+<script charset="utf-8" src="__PLUG__/kindeditor/lang/zh_CN.js"></script>
+<script charset="utf-8" src="__PLUG__/kindeditor/plugins/code/prettify.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $('#togglingForm').bootstrapValidator({
+            message: '验证没有通过',
+            feedbackicons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function (validator, form, submitButton) {
+                var index = layer.load(2,{
+                    shade: [0.4,'#000'] //0.1透明度的白色背景
+                });
+                $.post(form.attr('action'),form.serialize(),function(data){
+                    layer.close(index);
+                    if(data.status==1){
+                        layer.alert(data.msg,{icon:6,end:function(){
+                            location.href = data.redirect;
+                        }});
+                    }else {
+                        layer.alert(data.msg,{icon:5});
+                    }
+                });
+            },
+            fields: {
+                title: {
+                    validators: {
+                        notEmpty: {
+                            message: '请输入产品名称'
+                        }
+                    }
+                }
+            }
+        })
+        .find('button[data-toggle]')
+        .on('click', function () {
+            var $target = $($(this).attr('data-toggle'));
+            $target.toggle();
+            if (!$target.is(':visible')) {
+                $('#togglingForm').data('bootstrapValidator').disableSubmitButtons(false);
+            }
+        });
+    });
+</script>
+<include file="public/footer"/>

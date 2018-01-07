@@ -1,0 +1,309 @@
+<include file="public/header" title="{$model.name}" keywords="{$model.name}"/>
+<div class="col-lg-12 col-sm-12 col-xs-12">
+    <div class="widget  radius-bordered">
+        <div class="widget-header">
+            <span class="widget-caption">轮播图操作</span>
+        </div>
+        <div class="widget-body">
+            <form id="togglingForm" action="__URL__/carouseld_handler" method="post" enctype="multipart/form-data" class="form-horizontal" autocomplete="off">
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">轮播图名称<sup class="text-danger">*</sup></label>
+                    <div class="col-lg-2">
+                        <input type="text" name="title" value="<notempty name="info">{$info.title}</notempty>" class="form-control" id="name" placeholder="轮播图名称"/>
+                        <input type="hidden" name="id" value="<notempty name='info'>{$info.id}</notempty>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">轮播图网址</label>
+                    <div class="col-lg-2">
+                        <input type="url" name="url" value="<notempty name="info">{$info.url}</notempty>" class="form-control" id="url" placeholder="轮播图网址" data-bv-uri-message="请输入正确的网址" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">轮播图说明</label>
+                    <div class="col-lg-4">
+                        <textarea name="description" class="form-control" rows="6" placeholder="轮播图说明"><notempty name="info">{$info.description}</notempty></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">轮播图</label>
+                    <div class="col-sm-4">
+                        <div id="uploader-demo">
+                            <div id="fileList" class="uploader-list"></div>
+                            <div id="picker" style="width:100px">选择图片</div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="progress mt10" style="padding:0">
+                            <div class="progress-bar progress-bar1 progress-bar-danger" role="progressbar"
+                                 aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+                                 style="display:none;">
+                                <span class="" id="progress"></span>
+                            </div>
+                        </div>
+                        <div class="image-tools">
+                            <div class="btn btn-warning btn-xs" onclick="imgView();return false;" id="img_b">
+                                <i class="fa fa-search-plus" style="cursor:pointer;display:block"></i>
+                            </div>
+                            <div class="btn btn-danger btn-xs" onclick="noMasterImg()">
+                                <i class="fa fa-trash-o" style="cursor:pointer;display:block"></i>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="image-preview">
+                            <notempty name="info.image">
+                                <img src="{$info.image|image_round}" width="250" height="auto" id="images_preview">
+                                <input type="hidden" name="image" value="{$info.image}" id="reply_img"/>
+                                <else />
+                                <img src="" width="250" height="auto" id="images_preview" style="display:none;">
+                                <input type="hidden" name="image" value="" id="reply_img"/>
+                            </notempty>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">轮播图位置</label>
+                    <div class="col-lg-6" style="padding-left:0;">
+                        <div class="radio pull-left">
+                            <label>
+                                <input name="position" type="radio" value="1" class="colored-success" <notempty name="info"><eq name="info.position" value="1">checked="checked"</eq><else />checked="checked"</notempty>>
+                                <span class="text">头部</span>
+                            </label>
+                        </div>
+                        <div class="radio pull-left">
+                            <label>
+                                <input name="position" type="radio" value="2" class="colored-danger" <notempty name="info"><eq name="info.position" value="2">checked="checked"</eq></notempty>>
+                                <span class="text">中间</span>
+                            </label>
+                        </div>
+                        <div class="radio pull-left">
+                            <label>
+                                <input name="position" type="radio" value="3" class="colored-danger" <notempty name="info"><eq name="info.position" value="3">checked="checked"</eq></notempty>>
+                                <span class="text">左边</span>
+                            </label>
+                        </div>
+                        <div class="radio pull-left">
+                            <label>
+                                <input name="position" type="radio" value="4" class="colored-danger" <notempty name="info"><eq name="info.position" value="4">checked="checked"</eq></notempty>>
+                                <span class="text">右边</span>
+                            </label>
+                        </div>
+                        <div class="radio pull-left">
+                            <label class="pull-left">
+                                <input name="position" type="radio" value="5" class="colored-danger" <notempty name="info"><eq name="info.position" value="5">checked="checked"</eq></notempty>>
+                                <span class="text">底部</span>
+                            </label>
+                        </div>
+                        <div class="radio hide">
+                            <label>
+                                <input name="position" type="radio" class="colored-blueberry">
+                                <span class="text"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">水印</label>
+                    <div class="col-lg-2">
+                        <select class="water-type" name="water_type">
+                        	<option value="">--无水印--</option>
+                        	<option value="1">文字水印</option>
+                        	<option value="2">LOGO水印</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group water font-water" style="display:none;">
+                    <label class="col-lg-2 control-label">文字水印</label>
+                    <div class="col-lg-2">
+                        <input name="water" class="form-control" placeholder="文字水印"/>
+                    </div>
+                </div>
+                <div class="form-group water pic-water" style="display:none;">
+                    <label class="col-lg-2 control-label">LOGO水印</label>
+                    <div class="col-lg-2">
+                        <img src="{$site.logo}" height="32" width="32"/>
+                        <input type="hidden" name="logo" value="{$site.logo}"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">排序</label>
+                    <div class="col-lg-2">
+                        <input name="sort" value="<notempty name='info'>{$info.sort}<else />100</notempty>" class="form-control" placeholder="轮播图排序"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">轮播图状态</label>
+                    <div class="col-lg-6" style="padding-left:0;">
+                        <div class="radio pull-left">
+                            <label>
+                                <input name="status" type="radio" value="0" class="colored-success" <notempty name="info"><eq name="info.status" value="0">checked="checked"</eq><else />checked="checked"</notempty>>
+                                <span class="text">是</span>
+                            </label>
+                        </div>
+                        <div class="radio pull-left">
+                            <label>
+                                <input name="status" type="radio" value="1" class="colored-danger" <notempty name="info"><eq name="info.status" value="1">checked="checked"</eq></notempty>>
+                                <span class="text">否</span>
+                            </label>
+                        </div>
+                        <div class="radio hide">
+                            <label>
+                                <input name="status" type="radio" class="colored-blueberry">
+                                <span class="text"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <hr class="wide" />
+                <div class="form-group">
+                    <div class="col-lg-4 col-lg-offset-2">
+                        <button type="submit" class="btn btn-danger col-lg-2">提交</button>
+                        <button type="button" class="btn btn-warning col-lg-2 ml10" onclick="window.history.go(-1);">返回</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<js file="__JS__/validation/bootstrapValidator.js"/>
+<link href="__PLUG__/webuploader-0.1.5/webuploader.css" rel="stylesheet">
+<script src="__PLUG__/webuploader-0.1.5/webuploader.min.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $('#togglingForm').bootstrapValidator({
+            message: '验证没有通过',
+            feedbackicons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function (validator, form, submitButton) {
+                var index = layer.load(2,{
+                    shade: [0.4,'#000'] //0.1透明度的白色背景
+                });
+                $.post(form.attr('action'),form.serialize(),function(data){
+                    layer.close(index);
+                    if(data.status==1){
+                        layer.alert(data.msg,{icon:6,end:function(){
+                            location.href = data.redirect;
+                        }});
+                    }else {
+                        layer.alert(data.msg,{icon:5});
+                    }
+                });
+            },
+            fields: {
+                title: {
+                    validators: {
+                        notEmpty: {
+                            message: '请输入轮播图名称'
+                        }
+                    }
+                }
+            }
+        })
+        .find('button[data-toggle]')
+        .on('click', function () {
+            var $target = $($(this).attr('data-toggle'));
+            $target.toggle();
+            if (!$target.is(':visible')) {
+                $('#togglingForm').data('bootstrapValidator').disableSubmitButtons(false);
+            }
+        });
+        
+        $('.water-type').change(function(){
+        	var type = $(this).val();
+        	switch (type){
+        		case '':
+        			$('div.pic-water,div.font-water').hide();
+        			break;
+        		case '1':
+        			$('div.font-water').show();
+        			$('div.pic-water').hide();
+        			break;
+        		case '2':
+        			$('div.pic-water').show();
+        			$('div.font-water').hide();
+        			break;
+        		defaul:
+        			$('div.pic-water,div.font-water').hide();
+        	}
+        });
+        
+    });
+    var uploader = WebUploader.create({
+        swf:'__PLUG__/webuploader/Uploader.swf',
+        server: '{:Url("Uploadify/webUploader")}',
+        pick: '#picker',
+        resize : true,      //压缩上传
+        duplicate :false,    //多次上传
+        accept: {           // 只允许选择图片文件。
+            title: 'Images',
+            extensions: 'gif,jpg,jpeg,bmp,png',
+            mimeTypes: 'image/*'
+        },
+        formData: { w:64, h:64 }
+    });
+    // 当有文件添加进来的时候
+    uploader.on('fileQueued', function( file ) {
+        $('.progress-bar1').css('display','block');
+        uploader.upload();
+    });
+    // 文件上传过程中创建进度条实时显示。
+    uploader.on( 'uploadProgress', function( file, percentage ) {
+        $('.progress-bar1')
+            .css( 'width', percentage * 100 + '%' );
+        $('#progress').text('上传成功');
+    });
+    // 文件上传成功，给item添加成功class, 用样式标记上传成功。
+    uploader.on('uploadSuccess', function( file,response ) {
+        if(response.result.code==200){
+            var src = response.result.file;
+            $('#images_preview').attr('src',src);
+            $('#reply_img').val(src);
+            $('#images_preview').show();
+        }
+    });
+    
+    var imgView = function(pic_url){
+        pic_url = $('#reply_img').val();
+        if(!pic_url){
+            layer.alert('你还没有上传图片',{icon:5});
+            return false;
+        }
+        pic_url = pic_url +"?_id="+Math.round();
+        layer.open({
+            type: 1,
+            title: '查看图片',
+            skin: 'layui-layer-rim', //加上边框
+            area: ['50%', '60%'], //宽高
+            content:`<div style="text-align:center;margin-top:3rem;">
+            <img style='max-width:600px; max-height:500px; overflow:auto;' src='${pic_url}'/>
+            </div>`
+        });
+    };
+
+    var noMasterImg = function(){
+     	layer.confirm('您确定要删除吗?删除后将不能恢复!', {
+     		title:'友情提示',
+	        btn: ['是的确定','不没想好']
+	      },function(){
+      		$src = $("#images_preview").attr('src');
+	        if($src==''){
+	            layer.alert('您好没有上传图片',{icon:5});
+	            return false;
+	        }
+	        $.post("{:Url('Uploadify/delmg')}",{src:$src},function(data){
+	            if(data.status==1){
+	                layer.msg(data.msg,{icon:1});
+	                $("#reply_img").val('');
+	                $('#images_preview').attr('src','');
+	                $('#img_c').hide();
+	                $('#images_preview').hide();
+	            }else{
+	                layer.alert(data.msg,{icon:5});
+	            }
+	        });
+	    });
+    };
+</script>
+<include file="public/footer"/>

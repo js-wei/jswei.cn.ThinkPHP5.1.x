@@ -1,0 +1,265 @@
+<include file="public/header" title="{$model.name}" keywords="{$model.name}"/>
+<link href="__PLUG__/webuploader-0.1.5/webuploader.css" rel="stylesheet">
+<script src="__PLUG__/webuploader-0.1.5/webuploader.min.js"></script>
+<div class="col-lg-12 col-sm-12 col-xs-12">
+    <div class="widget  radius-bordered">
+        <div class="widget-header">
+            <span class="widget-caption">网站操作</span>
+        </div>
+        <div class="widget-body">
+            <form id="togglingForm" action="__URL__/add_handler" method="post" enctype="multipart/form-data" class="form-horizontal" autocomplete="off">
+                <div class="form-group">
+                    <label class="col-md-2 col-lg-2 control-label">网站标题<sup>*</sup></label>
+                    <div class="col-lg-3">
+                        <input type="text" name="title" value="<notempty name="info">{$info.title}</notempty>" class="form-control" id="name" placeholder="网站标题"/>
+                        <input type="hidden" name="id" value="<notempty name='info'>{$info.id}</notempty>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 col-lg-2 control-label">网站域名<sup>*</sup></label>
+                    <div class="col-lg-3">
+                        <input type="text" name="url" value="<notempty name="info">{$info.url}</notempty>" class="form-control" id="url" placeholder="网站域名"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">网站关键词</label>
+                    <div class="col-lg-3">
+                        <textarea name="keywords" class="form-control" rows="5" placeholder="文档关键词"><notempty name="info">{$info.keywords}</notempty></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 col-lg-2 control-label">网站说明</label>
+                    <div class="col-lg-3">
+                        <textarea name="description" class="form-control" rows="6" placeholder="网站说明"><notempty name="info">{$info.description}</notempty></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">网站LOGO</label>
+                    <div class="col-sm-3">
+                        <div id="uploader-demo">
+                            <div id="fileList" class="uploader-list"></div>
+                            <div id="picker" style="width:100px">选择图片</div>
+                            <div class="image-tools">
+                                <div class="btn btn-warning btn-xs" onclick="imgView();return false;" id="img_b">
+                                    <i class="fa fa-search-plus" style="cursor:pointer;display:block"></i>
+                                </div>
+                                <div class="btn btn-danger btn-xs" onclick="noMasterImg()">
+                                    <i class="fa fa-trash-o" style="cursor:pointer;display:block"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="progress mt10" style="padding:0">
+                            <div class="progress-bar progress-bar1 progress-bar-danger" role="progressbar"
+                                 aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+                                 style="display:none;">
+                                <span class="" id="progress"></span>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="image-preview">
+                           <notempty name="info.logo">
+                               <img src="{$info.logo}" width="150" height="auto" id="images_preview">
+                               <input type="hidden" name="logo" value="{$info.logo}" id="reply_img"/>
+                               <else />
+                               <img src="" width="250" height="auto" id="images_preview" style="display:none;">
+                               <input type="hidden" name="logo" value="" id="reply_img"/>
+                           </notempty>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 col-lg-2 control-label">联系固话</label>
+                    <div class="col-lg-3">
+                        <input type="text" name="tel" value="<notempty name="info">{$info.tel}</notempty>" class="form-control" id="tel" placeholder="联系固话"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 col-lg-2 control-label">联系手机</label>
+                    <div class="col-lg-3">
+                        <input type="text" name="phone" value="<notempty name="info">{$info.phone}</notempty>" class="form-control" id="phone" placeholder="联系手机"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 col-lg-2 control-label">联系传真</label>
+                    <div class="col-lg-3">
+                        <input type="text" name="fax" value="<notempty name="info">{$info.fax}</notempty>" class="form-control" id="fax" placeholder="联系传真"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 col-lg-2 control-label">联系邮箱</label>
+                    <div class="col-lg-3">
+                        <input type="text" name="email" value="<notempty name="info">{$info.email}</notempty>" class="form-control" id="email" placeholder="联系邮箱"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 col-lg-2 control-label">联系地址</label>
+                    <div class="col-lg-3">
+                        <input type="text" name="address" value="<notempty name="info">{$info.address}</notempty>" class="form-control" id="address" placeholder="联系地址"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 col-lg-2 control-label">版权信息</label>
+                    <div class="col-lg-3">
+                        <input type="text" name="copyright" value="<notempty name="info">{$info.copyright}</notempty>" class="form-control" id="copyright" placeholder="版权信息"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 col-lg-2 control-label">统计代码</label>
+                    <div class="col-lg-3">
+                        <textarea name="code" class="form-control" rows="5" placeholder="统计代码"><notempty name="info">{$info.code}</notempty></textarea>
+                    </div>
+                </div>
+                <hr class="wide" />
+                <div class="form-group">
+                    <div class="col-lg-3 col-lg-offset-2">
+                        <button type="submit" class="btn btn-danger">确认修改</button>
+                        <!--<button type="button" class="btn btn-warning col-lg-2 ml10" onclick="window.location.reload()">返回</button>-->
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<js file="__JS__/validation/bootstrapValidator.js"/>
+<script type="text/javascript">
+    $(function(){
+        $('#togglingForm').bootstrapValidator({
+            message: '验证没有通过',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function (validator, form, submitButton) {
+                var index = layer.load(2,{
+                    shade: [0.4,'#000'] //0.1透明度的白色背景
+                });
+                $.post(form.attr('action'),form.serialize(),function(data){
+                    layer.close(index);
+                    if(data.status==1){
+                        layer.alert(data.msg,{icon:6,end:function(){
+                            location.href = data.redirect;
+                        }});
+                    }else {
+                        layer.alert(data.msg,{icon:5});
+                    }
+                });
+            },
+            fields: {
+                title: {
+                    validators: {
+                        notEmpty: {
+                            message: '请输入网站名称'
+                        }
+                    }
+                },
+                name: {
+                    validators: {
+                        notEmpty: {
+                            message: '请输入网站英文名'
+                        }
+                    }
+                },
+                url:{
+                    validators: {
+                        notEmpty: {
+                            message: '请输入域名'
+                        }
+                    }
+                },
+                last_tpl:{
+                    validators: {
+                        notEmpty: {
+                            message: '请输入最终显示模板'
+                        }
+                    }
+                }
+            }
+        })
+        .find('button[data-toggle]')
+        .on('click', function () {
+            var $target = $($(this).attr('data-toggle'));
+            $target.toggle();
+            if (!$target.is(':visible')) {
+                $('#togglingForm').data('bootstrapValidator').disableSubmitButtons(false);
+            }
+        });
+
+        var uploader = WebUploader.create({
+            swf:'__PLUG__/webuploader/Uploader.swf',
+            server: '{:Url("Uploadify/webUploader")}',
+            pick: '#picker',
+            resize : true,      //压缩上传
+            duplicate :false,    //多次上传
+            accept: {           // 只允许选择图片文件。
+                title: 'Images',
+                extensions: 'gif,jpg,jpeg,bmp,png',
+                mimeTypes: 'image/*'
+            },
+            formData: { w:64, h:64 }
+        });
+        // 当有文件添加进来的时候
+        uploader.on('fileQueued', function( file ) {
+            $('.progress-bar1').css('display','block');
+            uploader.upload();
+        });
+        // 文件上传过程中创建进度条实时显示。
+        uploader.on( 'uploadProgress', function( file, percentage ) {
+            $('.progress-bar1')
+                .css( 'width', percentage * 100 + '%' );
+            $('#progress').text('上传成功');
+        });
+        // 文件上传成功，给item添加成功class, 用样式标记上传成功。
+        uploader.on('uploadSuccess', function( file,response ) {
+            if(response.result.code==200){
+                var src = response.result.file;
+                $('#images_preview').attr('src',src);
+                $('#reply_img').val(src);
+                $('#images_preview').show();
+            }
+        });
+    });
+
+     var imgView = function(pic_url){
+        pic_url = $('#reply_img').val();
+        if(!pic_url){
+            layer.alert('你还没有上传图片',{icon:5});
+            return false;
+        }
+        layer.open({
+            type: 1,
+            title: '查看图片',
+            skin: 'layui-layer-rim', //加上边框
+            area: ['600px', '500px'], //宽高
+            content:`<div style="max-width:600px; max-height:500px; overflow:auto;text-align:center;">
+            <img style='max-width:600px; max-height:500px; overflow:auto;' src='${pic_url}'/>
+            </div>`
+        });
+     };
+
+    var noMasterImg = function(){
+     	layer.confirm('您确定要删除吗?删除后将不能恢复!', {
+     		title:'友情提示',
+	        btn: ['是的确定','不没想好']
+	      },function(){
+      		$src = $("#images_preview").attr('src');
+	        if($src==''){
+	            layer.alert('您好没有上传图片',{icon:5});
+	            return false;
+	        }
+	        $.post("{:Url('Uploadify/delmg')}",{src:$src},function(data){
+	            if(data.status==1){
+	                layer.msg(data.msg,{icon:1});
+	                $("#reply_img").val('');
+	                $('#images_preview').attr('src','');
+	                $('#img_c').hide();
+	                $('#images_preview').hide();
+	            }else{
+	                layer.alert(data.msg,{icon:5});
+	            }
+	        });
+	    });
+    };
+</script>
+<include file="public/footer"/>

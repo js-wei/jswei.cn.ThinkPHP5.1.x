@@ -1,0 +1,84 @@
+<!-- Sidebar Menu -->
+<ul class="nav sidebar-menu">
+    <volist name="nav" id="vo">
+        <empty name="vo.child">
+            <li <if condition="$action eq $vo1['title'] and $controller eq $vo['title']">class="active"</if>
+                <if condition="$action eq 'add' and $controller eq $vo['title']">class="active"</if>
+                <empty name="vo.child"><if condition="$controller eq 'article' and $vo['id']==$aid ">class="active"</if>
+                <if condition="$controller eq 'single' and $vo['id']==$aid ">class="active"</if></empty>>
+                <a href="<eq name='vo.col' value='0'>{:Url($vo['title'].'/index')}<else />{:Url('article/index?aid='.$vo['id'])}</eq>">
+                    <i class="menu-icon <notempty name='vo.ico'>fa {$vo.ico}<else />glyphicon glyphicon-tasks</notempty>"></i>
+                    <span class="menu-text fa {$vo.ico}"><eq name='vo.col' value='0'>{$vo.name}<else />{$vo.title}</eq></span>
+                </a>
+            </li>
+            <else />
+            <li <eq name="controller" value="$vo['title']">class="active open"</eq>>
+                <a href="javascript:void(0);" class="menu-dropdown">
+                    <i class="menu-icon <notempty name='vo.ico'>fa {$vo.ico}<else />glyphicon glyphicon-tasks</notempty>"></i>
+                    <span class="menu-text"><eq name='vo.col' value='0'>{$vo.name}<else />{$vo.title}</eq></span>
+                </a>
+                <ul class="submenu">
+                    <volist name="vo.child" id="vo1">
+                        <empty name="vo1.child">
+                            <li <if condition="$action eq $vo1['title'] and $controller eq $vo['title']">class="active"</if>
+                                <if condition="$action eq 'add' and $controller eq $vo['title']">class="active"</if>
+                                >
+                                <a href="<eq name='vo1.col' value='0'>{:Url($vo['title'].'/'.$vo1['title'])}</eq>
+                                    <eq name='vo1.col' value='1'>
+                                    <eq name='vo1.type' value='1'>{:Url('article/index?aid='.$vo1['id'])}</eq>
+                                    <eq name='vo1.type' value='2'>{:Url('dwonload/list?aid='.$vo1['id'])}</eq>
+                                    <eq name='vo1.type' value='3'>{:Url('single/index?aid='.$vo1['id'])}</eq>
+                                    <eq name='vo1.type' value='4'>{:Url('corve/index?aid='.$vo1['id'])}</eq>
+                                    <eq name='vo1.type' value='5'>{:Url('form/index?aid='.$vo1['id'])}</eq>
+                                    </eq>">
+                                    <span class="menu-text fa {$vo1.ico}">&nbsp;<eq name='vo1.col' value='0'>{$vo1.name}<else />{$vo1.title}</eq></span>
+                                </a>
+                            </li>
+                            <else />
+                            <li <eq name="controller" value="vo.title">class="active open"</eq>>
+                                <a href="javascript:void(0);" class="menu-dropdown">
+                                    <span class="menu-text">{$vo1.title}</span>
+                                    <i class="menu-expand"></i>
+                                </a>
+                                <ul class="submenu">
+                                    <volist name="vo1.child" id="vo2">
+                                        <li <eq name="action" value="$vo2['title']">class="active"</eq><eq name="action" value="add">class="active"</eq>>
+                                            <a href="<eq name='vo2.col' value='0'>{:Url($vo1['name'].'/'.$vo2['name'])}<else />{:Url('article/index?aid='.$vo['id'])}</eq>">
+                                                <i class="menu-icon <notempty name='vo2.ico'>fa {$vo2.ico}<else />glyphicon glyphicon-tasks</notempty>"></i>
+                                                <span class="menu-text fa {$vo2.ico}">&nbsp;<eq name='vo2.col' value='0'>{$vo2.name}<else />{$vo2.title}</eq></span>
+                                            </a>
+                                        </li>
+                                    </volist>
+                                </ul>
+                            </li>
+                        </empty>
+                    </volist>
+                </ul>
+            </li>
+        </empty>
+    </volist>
+</ul>
+<!-- /Sidebar Menu -->
+</div>
+<if condition="$controller eq 'article' or $controller eq 'single'">
+    <script type="text/javascript">
+        (function(){
+            var li = $('li.active').parent('ul.submenu').parent('li');
+            //$('li.active .open').find('ul.submenu>li:first').addClass('active');
+            li.addClass('open');
+        })();
+        function getQueryString(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) return unescape(r[2]); return null;
+        }
+    </script>
+    <else />
+    <script type="text/javascript">
+        function getQueryString(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) return unescape(r[2]); return null;
+        }
+    </script>
+</if>

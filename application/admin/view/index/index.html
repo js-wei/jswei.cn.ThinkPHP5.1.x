@@ -1,0 +1,335 @@
+<include file="public/header" title="{$model.name|default='仪表盘'}" keywords="{$model.name|default='仪表盘'}"/>
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <div class="row">
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="databox radius-bordered databox-shadowed databox-graded">
+                <div class="databox-left bg-themesecondary">
+                    <div class="databox-piechart">
+                        <div data-toggle="easypiechart" class="easyPieChart" data-barcolor="#fff" data-linecap="butt" data-percent="50" data-animate="500" data-linewidth="3" data-size="47" data-trackcolor="rgba(255,255,255,0.1)" style="width: 47px; height: 47px; line-height: 47px;">
+							<i class="stat-icon icon-lg fa fa-cny"></i><canvas width="47" height="47"></canvas>
+						</div>
+                    </div>
+                </div>
+                <div class="databox-right">
+                    <span class="databox-number themesecondary">{$totals}/{$totals1}</span>
+                    <div class="databox-text darkgray"><a href="{:Url('order/index')}">总金额/支付金额</a></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="databox radius-bordered databox-shadowed databox-graded">
+                <div class="databox-left bg-themethirdcolor">
+                    <div class="databox-piechart">
+                        <div data-toggle="easypiechart" class="easyPieChart" data-barcolor="#fff" data-linecap="butt" data-percent="15" data-animate="500" data-linewidth="3" data-size="47" data-trackcolor="rgba(255,255,255,0.2)" style="width: 47px; height: 47px; line-height: 47px;">
+							<i class="stat-icon  icon-lg fa fa-eye"></i><canvas width="47" height="47"></canvas></div>
+                    </div>
+                </div>
+                <div class="databox-right">
+                    <span class="databox-number themethirdcolor">{$auth}</span>
+                    <div class="databox-text darkgray"><a href="{:Url('member/auth')}">新的认证</a></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="databox radius-bordered databox-shadowed databox-graded">
+                <div class="databox-left bg-themeprimary">
+                    <div class="databox-piechart">
+                        <div id="users-pie" data-toggle="easypiechart" class="easyPieChart" data-barcolor="#fff" data-linecap="butt" data-percent="76" data-animate="500" data-linewidth="3" data-size="47" data-trackcolor="rgba(255,255,255,0.1)" style="width: 47px; height: 47px; line-height: 47px;">
+							<i class="fa fa-users"></i><canvas width="47" height="47"></canvas>
+						</div>
+                    </div>
+                </div>
+                <div class="databox-right">
+                    <span class="databox-number themeprimary">{$sum}/{$sum1}</span>
+                    <div class="databox-text darkgray"><a href="{:Url('member/index')}">用户总数/未登录数</a></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="databox radius-bordered databox-shadowed databox-graded">
+                <div class="databox-left bg-themesecondary">
+                    <div class="databox-piechart">
+                        <div id="users-pie1" data-toggle="easypiechart" class="easyPieChart" data-barcolor="#fff" data-linecap="butt" data-percent="76" data-animate="500" data-linewidth="3" data-size="47" data-trackcolor="rgba(255,255,255,0.1)" style="width: 47px; height: 47px; line-height: 47px;">
+							<i class="fa fa-gift"></i><canvas width="47" height="47"></canvas>
+						</div>
+                    </div>
+                </div>
+                <div class="databox-right">
+                    <span class="databox-number themesecondary">{$order}/{$order1}</span>
+                    <div class="databox-text darkgray"><a href="{:Url('order/index')}">订单总数/支付数量</a></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-md-6">
+	        <div class="well with-header  with-footer">
+	            <div class="header bg-blue">
+	                系统详细信息
+	            </div>
+	            <table class="table table-hover">
+	                <thead class="bordered-darkorange">
+	                    <tr>
+	                        <th>
+	                            名称
+	                        </th>
+	                        <th>
+	                            详情
+	                        </th>
+	                    </tr>
+	                </thead>
+	                <tbody>
+	                    <tr>
+	                        <td style="width:120px;">
+	                            操作系统
+	                        </td>
+	                        <td>
+	                            {$os.os}
+	                        </td>
+	                    </tr>
+	                    <tr>
+	                        <td>
+	                            服务器
+	                        </td>
+	                        <td>
+	                            {$os.server}
+	                        </td>
+	                    </tr>
+	                    <tr>
+	                        <td>
+	                           PHP版本
+	                        </td>
+	                        <td>
+	                            {$os.php}
+	                        </td>
+	                    </tr>
+	                    <tr>
+	                        <td>
+	                            PHP安装地址
+	                        </td>
+	                        <td>
+	                            {$os.php_dir}
+	                        </td>
+	                    </tr>
+	                    <tr>
+	                        <td>
+	                            PHP框架
+	                        </td>
+	                        <td>
+	                            ThinkPHP
+	                        </td>
+	                    </tr>
+	                    <tr>
+	                        <td>
+	                            ThinkPHP版本
+	                        </td>
+	                        <td>
+	                            {$os.think_ver}
+	                        </td>
+	                    </tr>
+	                    <!--<tr>
+	                        <td>
+	                            安全模式
+	                        </td>
+	                        <td>
+	                           <eq name="os.safe_mode" value="1"><label class="label label-success">已开启</label><else /><label class="label label-danger">未开启</label></eq>
+	                        </td>
+	                    </tr>
+	                    <tr>
+	                        <td>
+	                            GD库安装
+	                        </td>
+	                        <td>
+	                             <eq name="os.gd" value="1"><label class="label label-success">已开启</label><else /><label class="label label-danger">未开启</label></eq>
+	                        </td>
+	                    </tr>
+	                    <tr>
+	                        <td>
+	                            GD库版本
+	                        </td>
+	                        <td>
+	                            {$os.gd_ver}
+	                        </td>
+	                    </tr>-->
+	                    <tr>
+	                        <td>
+	                            MYSQL版本
+	                        </td>
+	                        <td>
+	                            {$os.mysql}
+	                        </td>
+	                    </tr>
+	                    <tr>
+	                        <td>
+	                            数据库大小
+	                        </td>
+	                        <td>
+	                            {$os.mysql_size}
+	                        </td>
+	                    </tr>
+	                    <tr>
+	                        <td>
+	                            文件上传限制
+	                        </td>
+	                        <td>
+	                            {$os.file_size}
+	                        </td>
+	                    </tr>
+	                    <tr>
+	                        <td>
+	                            系统语言
+	                        </td>
+	                        <td>
+	                            {$os.server_lang}
+	                        </td>
+	                    </tr>
+	                    <!--<tr>
+	                        <td>
+	                            内存溢出
+	                        </td>
+	                        <td>
+	                            {$os.memory_limit}
+	                        </td>
+	                    </tr>-->
+	                    <tr>
+	                        <td>
+	                            系统时间
+	                        </td>
+	                        <td id="sys-time">
+	                            {$os.system_time}
+	                        </td>
+	                    </tr>
+	                </tbody>
+	            </table>
+	            <div class="footer">
+	                <code>系统信息只做参考</code>
+	            </div>
+	        </div>
+	    </div>
+	     <div class="col-xs-12 col-md-6">
+	        <div class="well with-header  with-footer">
+	            <div class="header bg-success">
+	                程序详细信息
+	            </div>
+	            <table class="table table-hover">
+	                <thead class="bordered-darkorange">
+	                    <tr>
+	                        <th>
+	                            名称
+	                        </th>
+	                        <th>
+	                            详情
+	                        </th>
+	                    </tr>
+	                </thead>
+	                <tbody>
+	                    <tr>
+	                        <td style="width:120px;">
+	                            网站域名
+	                        </td>
+	                        <td>
+	                            {$os.host}
+	                        </td>
+	                    </tr>
+	                    <tr>
+	                        <td>
+	                            网站名称
+	                        </td>
+	                        <td>
+	                            {$site.title}
+	                        </td>
+	                    </tr>
+	                    <tr>
+	                        <td>
+	                           网站关键词
+	                        </td>
+	                        <td>
+	                            {$site.keywords}
+	                        </td>
+	                    </tr>
+	                    <tr>
+	                        <td>
+	                            网站描述
+	                        </td>
+	                        <td>
+	                            {$site.description|mb_substr=0,150}<if condition="strlen($site['description']) gt 150">...</if>
+	                        </td>
+	                    </tr>
+	                    <!--<tr>-->
+	                        <!--<td>-->
+	                            <!--轮播图-->
+	                        <!--</td>-->
+	                        <!--<td>-->
+	                            <!--<eq name="site.carousel" value="1"><label class="label label-success">已开启</label><else /><label class="label label-danger">未开启</label></eq>-->
+	                        <!--</td>-->
+	                    <!--</tr>-->
+	                    <!--<tr>-->
+	                        <!--<td>-->
+	                            <!--轮播图调用数-->
+	                        <!--</td>-->
+	                        <!--<td>-->
+	                            <!--{$site.sum}-->
+	                        <!--</td>-->
+	                    <!--</tr>-->
+	                    <!--<tr>-->
+	                        <!--<td>-->
+	                            <!--友情链接-->
+	                        <!--</td>-->
+	                        <!--<td>-->
+	                           <!--<eq name="site.flink" value="1"><label class="label label-success">已开启</label><else /><label class="label label-danger">未开启</label></eq>-->
+	                        <!--</td>-->
+	                    <!--</tr>-->
+	                    <!--<tr>-->
+	                        <!--<td>-->
+	                            <!--分享-->
+	                        <!--</td>-->
+	                        <!--<td>-->
+	                            <!--<eq name="site.is_shard" value="1"><label class="label label-success">已开启</label><else /><label class="label label-danger">未开启</label></eq>-->
+	                        <!--</td>-->
+	                    <!--</tr>-->
+	                    <tr>
+	                        <td>
+	                            联系方式
+	                        </td>
+	                        <td>
+	                           固话:<notempty name="site.tel">{$site.tel}<else />未填写</notempty>  手机:<notempty name="site.phone">{$site.phone}<else />未填写</notempty>  传真: <notempty name="site.fax">{$site.fax}<else />未填写</notempty>
+	                        </td>
+	                    </tr>
+	                    <tr>
+	                        <td>
+	                            联系地址
+	                        </td>
+	                        <td>
+	                           {$site.address}
+	                        </td>
+	                    </tr>
+	                    <tr>
+	                        <td>
+	                            版权信息
+	                        </td>
+	                        <td>
+	                            {$site.icp}{$site.copyright}
+	                        </td>
+	                    </tr>
+	                </tbody>
+	            </table>
+	            <div class="footer">
+	                <code>程序配置可以在设置中完成</code>
+	            </div>
+	        </div>
+	    </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function current(){
+        var d=new Date(),str='';
+        str +=d.getFullYear()+'年'; //获取当前年份
+        str +=d.getMonth()+1+'月'; //获取当前月份（0——11）
+        str +=d.getDate()+'日';
+        str +=' '+d.getHours()+'时';
+        str +=d.getMinutes()+'分';
+        str +=d.getSeconds()+'秒';
+        return str;
+    }
+    $("#sys-time").html(current);
+    setInterval(function(){$("#sys-time").html(current)},1000);
+</script>
+<include file="public/footer"/>

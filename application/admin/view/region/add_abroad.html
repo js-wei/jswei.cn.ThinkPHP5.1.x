@@ -1,0 +1,202 @@
+<include file="public/header" title="{$model.name}" keywords="{$model.name}"/>
+<div class="col-lg-12 col-sm-12 col-xs-12">
+    <div class="widget  radius-bordered">
+        <div class="widget-header">
+            <span class="widget-caption">区域操作</span>
+        </div>
+        <div class="widget-body">
+            <form id="togglingForm" action="__URL__/add_abroad_handler" method="post" enctype="multipart/form-data" class="form-horizontal" autocomplete="off">
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">区域代码<sub class="text-danger">*</sub></label>
+                    <div class="col-lg-2">
+                        <notempty name="info">
+                            <label class="label label-danger padding-10">{$info.provinceid}</label>
+                            <input type="hidden" name="id" value="{$info.id}">
+                            <input type="hidden" class="form-control" name="provinceid" value="{$info.provinceid}"/>
+                            <else/>
+                            <input type="text" name="provinceid" class="form-control" placeholder="地区代码"/>
+                        </notempty>
+                        <div class="text-danger">
+                            *必填且唯一的
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">地区名称<sup class="text-danger">*</sup></label>
+                    <div class="col-lg-2">
+                        <input type="text" name="province" value="<notempty name="info">{$info.province}</notempty>" class="form-control" id="province" placeholder="地区名称"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">关键词<sup class="text-danger">*</sup></label>
+                    <div class="col-lg-2">
+                        <input type="text" name="keywords" value="<notempty name="info">{$info.keywords}</notempty>" class="form-control" id="keywords" placeholder="关键词"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">排序</label>
+                    <div class="col-lg-2">
+                        <input name="sort" value="<notempty name='info'>{$info.sort}<else />100</notempty>" class="form-control" placeholder="区域排序"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">城市和排序</label>
+                    <div class="col-lg-6">
+                        <div class="col-md-12 city mb10" style="padding-left:0;margin-left:0;">
+                            <notempty name="c">
+                                <volist name="c" id="vo1">
+                                    <div class="col-lg-3">
+                                        <label class="label label-sky mt10">{$vo1.city}</label>
+                                        <eq name="vo1.status" value="0"> <i class="fa fa-eye pointer" data-type="0" data-id="{$vo1.id}"></i><else /><i class="fa fa-eye-slash pointer" data-type="1" data-id="{$vo1.id}"></i></eq>
+                                        <eq name="vo1.com" value="1">
+                                            <label class="label label-danger">已推荐</label>
+                                            <else />
+                                            <label class="label label-azure">未推荐</label>
+                                        </eq>
+                                        <a href="__URL__/set_city?id={$vo1.id}&fid={:input('id')}">详细</a>
+                                        <input type="text" class="form-control" name="id_city[{$vo1.id}]" placeholder="排序" value="{$vo1.sort}" >
+                                        <input type="hidden" class="form-control" name="status_city[{$vo1.id}]" value="0" />
+                                    </div>
+                                </volist>
+                            </notempty>
+                        </div>
+                        <button type="button" class="btn btn-danger add-city" data-id="{++$last_id}">添加城市</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">区域状态</label>
+                    <div class="col-lg-6">
+                        <div class="radio pull-left">
+                            <label>
+                                <input name="status" type="radio" value="0" class="colored-success" <notempty name="info"><eq name="info.status" value="0">checked="checked"</eq><else />checked="checked"</notempty>>
+                                <span class="text">是</span>
+                            </label>
+                        </div>
+                        <div class="radio pull-left">
+                            <label>
+                                <input name="status" type="radio" value="1" class="colored-danger" <notempty name="info"><eq name="info.status" value="1">checked="checked"</eq></notempty>>
+                                <span class="text">否</span>
+                            </label>
+                        </div>
+                        <div class="radio hide">
+                            <label>
+                                <input name="status" type="radio" class="colored-blueberry">
+                                <span class="text"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <hr class="wide" />
+                <div class="form-group">
+                    <div class="col-lg-4 col-lg-offset-2">
+                        <button type="submit" class="btn btn-danger col-lg-2">提交</button>
+                        <button type="button" class="btn btn-warning col-lg-2 ml10" onclick="window.history.go(-1);">返回</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<js file="__JS__/validation/bootstrapValidator.js"/>
+<script type="text/javascript">
+    $(function(){
+        /*
+        $('#togglingForm').bootstrapValidator({
+            message: '验证没有通过',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function (validator, form, submitButton) {
+                var index = layer.load(2,{
+                    shade: [0.4,'#000'] //0.1透明度的白色背景
+                });
+                $.post(form.attr('action'),form.serialize(),function(data){
+                    layer.close(index);
+                    if(data.status==1){
+                        layer.alert(data.msg,{icon:6,end:function(){
+                            location.href = data.redirect;
+                        }});
+                    }else {
+                        layer.alert(data.msg,{icon:5});
+                    }
+                });
+            },
+            fields: {
+                provinceid: {
+                    validators: {
+                        notEmpty: {
+                            message: '请输入地区代码'
+                        }
+                    }
+                },
+                province:{
+                    validators: {
+                        notEmpty: {
+                            message: '请输地区名称'
+                        }
+                    }
+                }
+            }
+        })
+        .find('button[data-toggle]')
+        .on('click', function () {
+            var $target = $($(this).attr('data-toggle'));
+            $target.toggle();
+            if (!$target.is(':visible')) {
+                $('#togglingForm').data('bootstrapValidator').disableSubmitButtons(false);
+            }
+        });
+         */
+        $('#togglingForm').submit(function (e) {
+            e.preventDefault();
+            var form = $(this);
+            if($('input[name="province"]').val()==''){
+                layer.msg('请输入地区名');
+                return;
+            }
+
+            var index = layer.load(2,{
+                shade: [0.4,'#000'] //0.1透明度的白色背景
+            });
+            $.post(form.attr('action'),form.serialize(),function(data){
+                layer.close(index);
+                if(data.status==1){
+                    layer.alert(data.msg,{icon:6,end:function(){
+                        location.href = data.redirect;
+                    }});
+                }else {
+                    layer.alert(data.msg,{icon:5});
+                }
+            });
+        });
+        $(document).on('click','.pointer',function (e) {
+            var t = $(this).attr('data-type'),
+                id = $(this).attr('data-id'),
+                p = null;
+            p = $('input[name="status_city['+id+']"]');
+            if($(this).hasClass('fa-eye')){
+                $(this).removeClass('fa-eye');
+                $(this).addClass('fa-eye-slash');
+                p.val(1);
+            }else{
+                $(this).removeClass('fa-eye-slash');
+                $(this).addClass('fa-eye');
+                p.val(0);
+            }
+        });
+        $(document).on('click','.add-city',function (e) {
+            var id = $(this).attr('data-id');
+            var html =`<div class="col-lg-3">
+                    <input type="text" placeholder="城市名" name="city_name[${id}]" class="form-control">
+                    <i class="fa fa-eye pointer" data-type="0" data-id="${id}"></i>
+                    <input type="text" class="form-control" name="id_city[${id}]" placeholder="排序" value="100"/>
+                    <input type="hidden" class="form-control" name="status_city[${id}]" value="0"/>
+                </div>`;
+            $(this).attr('data-id',++id);
+            $('.city').append(html);
+        });
+    });
+</script>
+<include file="public/footer"/>

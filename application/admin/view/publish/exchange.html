@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>修改用户密码</title>
+		<css file="__CSS__/bootstrap.min.css"/>
+		<js file="__JS__/jquery-2.0.3.min.js"/>
+		<js file="__JS__/bootstrap.min.js"/>
+		<js file="__PLUG__/layer/layer.js"/>
+		<js file="__JS__/validation/bootstrapValidator.js"/>
+	</head>
+	<body>
+		<div class="col-xs-10 col-xs-offset-2">
+		    <div style="margin-top:10px;">
+		       <form id="togglingForm" action="__URL__/exchange_handler" method="post" enctype="multipart/form-data" class="form-horizontal" autocomplete="off">
+	                <div class="form-group">
+	                    <label class="col-xs-12 control-label">原密码</label>
+	                    <div class="col-xs-6">
+	                        <input type="password" class="form-control" name="old_password"  placeholder="请输入原密码">
+	                    </div>
+	                </div>
+	                <div class="form-group">
+	                    <label class="col-xs-12  control-label">新密码</label>
+	                    <div class="col-xs-6">
+	                        <input type="password" class="form-control" name="new_password"  placeholder="请输入新密码">
+	                    </div>
+	                </div>
+	                <div class="form-group">
+	                    <label class="col-xs-12 control-label">确认新密码</label>
+	                    <div class="col-xs-6">
+	                        <input type="password" class="form-control" name="confirm_password"  placeholder="请输入确认新密码">
+	                    </div>
+	                </div>
+	                <div class="form-group">
+	                    <div class="col-xs-12">
+	                        <button type="submit" class="btn btn-danger col-xs-5">确认修改</button>
+	                    </div>
+	                </div>
+	            </form>
+		    </div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		$(function(){
+	        $('#togglingForm').bootstrapValidator({
+	            message: '验证没有通过',
+	            feedbackIcons: {
+	                valid: 'glyphicon glyphicon-ok',
+	                invalid: 'glyphicon glyphicon-remove',
+	                validating: 'glyphicon glyphicon-refresh'
+	            },
+	            submitHandler: function (validator, form, submitButton) {
+	                var index = layer.load(2,{
+	                    shade: [0.4,'#000'] //0.1透明度的白色背景
+	                });
+	                $.post(form.attr('action'),form.serialize(),function(data){
+	                    layer.close(index);
+	                    if(data.status==1){
+	                        layer.alert(data.msg,{icon:6,end:function(){
+	                            window.top.location.href = data.redirect;
+	                        }});
+	                    }else {
+	                        layer.alert(data.msg,{icon:5});
+	                    }
+	                });
+	            },
+	            fields: {
+	                old_password: {
+	                    validators: {
+	                        notEmpty: {
+	                            message: '请输入原始密码'
+	                        }
+	                    }
+	                },
+	                new_password:{
+	                    validators: {
+	                        notEmpty: {
+	                            message: '请输入新的密码'
+	                        }
+	                    }
+	                },
+	                confirm_password:{
+	                	validators: {
+	                        notEmpty: {
+	                            message: '请输入确认密码'
+	                        }
+	                    }
+	                }
+	            }
+	        })
+	        .find('button[data-toggle]')
+	        .on('click', function () {
+	            var $target = $($(this).attr('data-toggle'));
+	            $target.toggle();
+	            if (!$target.is(':visible')) {
+	                $('#togglingForm').data('bootstrapValidator').disableSubmitButtons(false);
+	            }
+	        });
+	    });
+	</script>
+</html>

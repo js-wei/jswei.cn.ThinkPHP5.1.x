@@ -1,0 +1,76 @@
+<include file="public/header" title="{$model.name}" keywords="{$model.name}"/>
+<div class="col-lg-12 col-sm-12 col-xs-12">
+    <div class="widget  radius-bordered">
+        <div class="widget-header">
+            <span class="widget-caption">发货操作</span>
+        </div>
+        <div class="widget-body">
+            <form id="togglingForm" action="__URL__/add_send" method="post" enctype="multipart/form-data" class="form-horizontal" autocomplete="off">
+                <div class="form-group">
+                    <label class="col-md-2 col-lg-2 control-label">发货单号<sup>*</sup></label>
+                    <div class="col-md-6 col-md-6 col-lg-6">
+                        <input type="text" name="sendid" class="form-control" id="name" placeholder="发货单号"/>
+                        <input type="hidden" name="id" value="<notempty name='info'>{$info.id}</notempty>">
+                    </div>
+                </div>
+                <hr class="wide" />
+                <div class="form-group">
+                    <div class="col-md-6 col-lg-6 col-lg-offset-2">
+                        <button type="submit" class="btn btn-danger col-lg-2">确认发货</button>
+                        <button type="button" class="btn btn-warning col-lg-2 ml10" onclick="history.go(-1)">返回</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<js file="__JS__/validation/bootstrapValidator.js"/>
+<js type="text/javascript" file="__PLUG__/jquery.han2pin.min.js"/>
+<script src="__JS__/colorpicker/jquery.minicolors.js"></script>
+<link rel="stylesheet" href="__PLUG__/Uploadify/uploadify.css" />
+<script type="text/javascript" src="__PLUG__/Uploadify/jquery.uploadify.min.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $('#togglingForm').bootstrapValidator({
+            message: '验证没有通过',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function (validator, form, submitButton) {
+                var index = layer.load(2,{
+                    shade: [0.4,'#000'] //0.1透明度的白色背景
+                });
+                $.post(form.attr('action'),form.serialize(),function(data){
+                    layer.close(index);
+                    if(data.status==1){
+                        layer.alert(data.msg,{icon:6,end:function(){
+                            location.href = data.redirect;
+                        }});
+                    }else {
+                        layer.alert(data.msg,{icon:5});
+                    }
+                });
+            },
+            fields: {
+                sendid: {
+                    validators: {
+                        notEmpty: {
+                            message: '请输入发货单号'
+                        }
+                    }
+                }
+            }
+        })
+        .find('button[data-toggle]')
+        .on('click', function () {
+            var $target = $($(this).attr('data-toggle'));
+            $target.toggle();
+            if (!$target.is(':visible')) {
+                $('#togglingForm').data('bootstrapValidator').disableSubmitButtons(false);
+            }
+        });
+    });
+</script>
+<include file="public/footer"/>

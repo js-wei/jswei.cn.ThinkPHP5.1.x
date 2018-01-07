@@ -1,0 +1,72 @@
+<div class="clearfix"></div>
+<div class="col-xs-12 col-md-12 form-search">
+  <form id="search" autocomplete="off" action="__SELF__" method="get" class="form-horizontal" novalidate="novalidate">
+      <div class="col-xs-12 col-md-4 col-lg-4 mt10" style="padding:0">
+        <span class="input-icon">
+            <input type="search" name="s_keywords" value="{$search.s_keywords}" class="form-control search"  placeholder="[title]">
+            <input type="hidden" name="p" value="{:input('p')}">
+            <input type="hidden" name="id" value="{:input('id')}">
+            <i class="glyphicon glyphicon-search blue"></i>
+        </span>
+      </div>
+      <div class="col-xs-12 col-md-4 col-lg-4 mt10" style="padding:0;">
+        <div class="input-group" style="padding:0">
+            <span class="input-group-addon">
+                <i class="fa fa-calendar"></i>
+            </span>
+            <input type="text" name="s_date" value="{$search.s_date}" style="padding:0" class="form-control" placeholder="请选择日期" id="reservation">
+        </div>
+      </div>
+      <div class="col-xs-12 col-md-4 col-lg-2 mt10" style="padding:0">
+		<php>
+			$s = '[status]';
+		</php>
+		<neq name="$s" value="[status]">
+			<php>
+				$s = explode('|',$s);
+			</php>
+			<select name="s_status" style="padding-right:0">
+				<volist name="$s" id="sl">
+					<php>
+					$sl = explode(',',$sl);
+					</php>
+					<option value="{$sl[0]}" <php>if($search['s_status']==$sl[0]){echo 'selected';}</php>>{$sl[1]}</option>
+				</volist>
+			</select>
+		<else />
+		<select name="s_status" style="padding-right:0">
+            <option value="-1">--全部--</option>
+            <option value="0" <eq name="search.s_status" value="0">selected</eq><eq name="search.s_status" value="">selected</eq>>启用</option>
+            <option value="1" <eq name="search.s_status" value="1">selected</eq>>禁用</option>
+        </select>
+		</neq>
+      </div>
+      <button type="button" class="btn btn-primary onSearch mt10">搜素</button>
+  </form>
+</div>
+<script src="__JS__/datetime/bootstrap-datepicker.js"></script>
+<script src="__JS__/datetime/moment.js"></script>
+<script src="__JS__/datetime/daterangepicker.js"></script>
+<script type="text/javascript">
+  $(function(){
+      $('.onSearch').on('click',(e)=>{
+          $('#search').submit();
+      });
+
+      //区域日期选择
+      if($('#reservation').length){
+	      $('#reservation').daterangepicker({
+	          format:'YYYY/MM/DD',
+	          locale:{
+	            applyLabel:'应用',
+	            cancelLabel:'取消',
+	            fromLabel:'开始',
+	            toLabel:'结束',
+	            daysOfWeek : [ '日', '一', '二', '三', '四', '五', '六' ],
+                  monthNames : [ '一月', '二月', '三月', '四月', '五月', '六月',
+                  '七月', '八月', '九月', '十月', '十一月', '十二月' ]
+	          }
+	      });
+      }
+  });
+</script>

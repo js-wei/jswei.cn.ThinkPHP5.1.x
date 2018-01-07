@@ -1,0 +1,221 @@
+<include file="public/header" title="{$model.name}" keywords="{$model.name}"/>
+<div class="col-lg-12 col-sm-12 col-xs-12">
+    <div class="widget  radius-bordered">
+        <div class="widget-header">
+            <span class="widget-caption">消息操作</span>
+        </div>
+        <div class="widget-body">
+            <form id="togglingForm" action="__URL__/add_handler" method="post" enctype="multipart/form-data" class="form-horizontal" autocomplete="off">
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">消息标题<sup class="text-danger">*</sup></label>
+                    <div class="col-lg-4">
+                        <input type="text" name="title" value="<notempty name="info">{$info.title}</notempty>" class="form-control" id="name" placeholder="消息名称"/>
+                        <input type="hidden" name="id" value="<notempty name='info'>{$info.id}</notempty>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">消息内容</label>
+                    <div class="col-lg-4">
+                        <textarea name="content" class="form-control" rows="6" placeholder="消息内容"><notempty name="info">{$info.content}</notempty></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">发送类型</label>
+                    <div class="col-lg-6">
+                        <div class="radio pull-left" style="margin:0;">
+                            <label  style="padding:0px;">
+                                <input name="type" type="radio" value="0" class="colored-success" <notempty name="info"><eq name="info.status" value="0">checked="checked"</eq><else />checked="checked"</notempty>>
+                                <span class="text">所有用户</span>
+                            </label>
+                        </div>
+                        <div class="radio hide">
+                            <label>
+                                <input name="type" type="radio" class="colored-blueberry">
+                                <span class="text"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">状态</label>
+                    <div class="col-lg-6">
+                        <div class="radio pull-left" style="margin:0;">
+                            <label  style="padding:0px;">
+                                <input name="status" type="radio" value="0" class="colored-success" <notempty name="info"><eq name="info.status" value="0">checked="checked"</eq><else />checked="checked"</notempty>>
+                                <span class="text">是</span>
+                            </label>
+                        </div>
+                        <div class="radio pull-left">
+                            <label>
+                                <input name="status" type="radio" value="1" class="colored-danger" <notempty name="info"><eq name="info.status" value="1">checked="checked"</eq></notempty>>
+                                <span class="text">否</span>
+                            </label>
+                        </div>
+                        <div class="radio hide">
+                            <label>
+                                <input name="status" type="radio" class="colored-blueberry">
+                                <span class="text"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <hr class="wide" />
+                <div class="form-group">
+                    <div class="col-lg-4 col-lg-offset-2">
+                        <button type="submit" class="btn btn-danger col-lg-2">提交</button>
+                        <button type="button" class="btn btn-warning col-lg-2 ml10" onclick="window.history.go(-1);">返回</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<js file="__JS__/validation/bootstrapValidator.js"/>
+<link rel="stylesheet" href="__PLUG__/Uploadify/uploadify.css" />
+<script type="text/javascript" src="__PLUG__/Uploadify/jquery.uploadify.min.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $('#togglingForm').bootstrapValidator({
+            message: '验证没有通过',
+            feedbackicons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function (validator, form, submitButton) {
+                var index = layer.load(2,{
+                    shade: [0.4,'#000'] //0.1透明度的白色背景
+                });
+                $.post(form.attr('action'),form.serialize(),function(data){
+                    layer.close(index);
+                    if(data.status==1){
+                        layer.alert(data.msg,{icon:6,end:function(){
+                            location.href = data.redirect;
+                        }});
+                    }else {
+                        layer.alert(data.msg,{icon:5});
+                    }
+                });
+            },
+            fields: {
+                title: {
+                    validators: {
+                        notEmpty: {
+                            message: '请输入消息名称'
+                        }
+                    }
+                },
+                price: {
+                    validators: {
+                        notEmpty: {
+                            message: '请输入消息价格'
+                        },
+                        regexp: {           //正则校验
+                            regexp:/^\d+(\.\d{2})?$/,
+                            message: '只能保留两位小数'
+                        }
+                    }
+                },
+                divides: {
+                    validators: {
+                        notEmpty: {
+                            message: '请输入消息分成比例'
+                        },
+                        regexp: {           //正则校验
+                            regexp:/^\d+(\.\d{2})?$/,
+                            message: '只能保留两位小数'
+                        }
+                    }
+                }
+            }
+        })
+            .find('button[data-toggle]')
+            .on('click', function () {
+                var $target = $($(this).attr('data-toggle'));
+                $target.toggle();
+                if (!$target.is(':visible')) {
+                    $('#togglingForm').data('bootstrapValidator').disableSubmitButtons(false);
+                }
+            });
+//        $('input[name="price"],input[name="divides"]').blur(function () {
+//            var v = $(this).val();
+//            if(v!=''){
+//                v = v.toString();
+//                $(this).val(v.toFixed(2));
+//            }
+//        });
+    });
+    function imgView(pic_url){
+        if(pic_url == 'master'){
+            pic_url = $('#reply_img').val();
+        }
+        if(pic_url==''){
+            layer.alert('你还没有上传图片',{icon:5});
+            return false;
+        }
+        layer.open({
+            type: 1,
+            title: '查看图片',
+            skin: 'layui-layer-rim', //加上边框
+            area: ['500px', '400px'], //宽高
+            content: "<div style='max-width:500px; max-height:400px; overflow:auto;'><img style='max-width:500px; max-height:400px; overflow:auto;margin:10px;' src='"+pic_url+"'  /></div>"
+        });
+    }
+
+    //照片
+    $("#fileImg").uploadify({
+        fileTypeDesc    : '图片文件',
+        fileTypeExts    : '*.png;*.jpg;*.jpeg;*.gif;',
+        buttonText      : '选择图片',
+        buttonClass     : 'upload_button',
+        fileObjName     : 'image',          //上传文件接收名
+        swf             : '__PLUG__/Uploadify/uploadify.swf',
+        uploader        : "{:Url('Uploadify/uploadimg')}",
+        multi           : false,
+        onUploadSuccess : function(file, data, response) {
+            $("#reply_img").val(data);
+            $("#images_preview").attr('src',data);
+            $('#images_preview').show();
+            $('#img_b').show();
+            $('#img_c').show();
+        }
+    });
+    function noMasterImg(){
+        $src = $("#images_preview").attr('src');
+        if($src==''){
+            layer.alert('您好没有上传图片',{icon:5});
+            return false;
+        }
+        $.post("{:Url('Uploadify/delmg')}",{src:$src},function(data){
+            if(data.status==1){
+                layer.msg(data.msg,{icon:1});
+                $("#reply_img").val('');
+                $('#images_preview').attr('src','');
+                $('#img_c').hide();
+                $('#images_preview').hide();
+            }else{
+                layer.alert(data.msg,{icon:5});
+            }
+        });
+    }
+    function deleteImage(obj) {
+        var url = $(obj).attr('data-path');
+        if(url==''){
+            layer.alert('删除图片不存在',{icon:2});
+        }
+        var index = layer.load(2, {
+            shade: [0.4,'#fff'] //0.1透明度的白色背景
+        });
+        $.post("{:Url('Uploadify/delmg')}",{src:url},function(data){
+            if(data.status==1){
+                layer.msg(data.msg,{icon:1,end:function () {
+                    layer.closeAll();
+                    $(obj).parent('span.imageDiv').remove();
+                }});
+            }else{
+                layer.msg(data.msg,{icon:5});
+            }
+        });
+    }
+</script>
+<include file="public/footer"/>
